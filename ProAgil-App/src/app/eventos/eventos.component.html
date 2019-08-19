@@ -33,15 +33,15 @@
           *ngIf="mostrarImagem"
           [style.width.px]="imagemLargura"
           [style.margin.px]="imagemMargem"
-          src="http://localhost:5000/img/{{ evento.imagemUrl }}"
+          src="http://localhost:5000/img/{{ evento.ImagemUrl }}"
         />
       </td>
-      <td>{{ evento.eventoId }}</td>
-      <td>{{ evento.tema }}</td>
-      <td>{{ evento.local }}</td>
-      <td>{{ evento.dataEvento }}</td>
-      <td>{{ evento.qtdePessoas | percent }}</td>
-      <td>{{ evento.lote }}</td>
+      <td>{{ evento.Id }}</td>
+      <td>{{ evento.Tema }}</td>
+      <td>{{ evento.Local }}</td>
+      <td>{{ evento.DataEvento }}</td>
+      <td>{{ evento.QtdePessoas | percent }}</td>
+      <td>{{ evento.Lote }}</td>
       <td>
         <button class="btn btn-success"></button>
         <button class="btn btn-danger"></button>

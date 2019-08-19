@@ -132,12 +132,31 @@ namespace ProAgil.Repository
       return await query.ToArrayAsync();
     }
 
+    public async Task<Palestrante[]> GetAllPalestrantes(bool includeEventos)
+    {
+      IQueryable<Palestrante> query = _context.Palestrantes
+              .Include(c => c.RedesSociais);
+
+      if (includeEventos)
+      {
+        query
+            .Include(pe => pe.PalestranteEventos)
+            .ThenInclude(p => p.Evento);
+      }
+
+      query = query
+        .OrderBy(p => p.Nome);
+
+      return await query.ToArrayAsync();
+    }
+
 
     // Palestrantes
 
     public ProAgilRepository(ProAgilContext context)
     {
       this._context = context;
+      this._context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
     }
 
   }
