@@ -20,8 +20,8 @@ export class EventosComponent implements OnInit {
       : this.eventos;
   }
 
-  eventosFiltrados: Evento[];
-  eventos: Evento[];
+  eventosFiltrados: Evento[] = [];
+  eventos: Evento[] = [];
   imagemMargem = 2;
   imagemLargura = 50;
   mostrarImagem = false;

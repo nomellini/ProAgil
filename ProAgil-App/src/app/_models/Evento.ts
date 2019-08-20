@@ -1,3 +1,7 @@
+import { Lote } from './Lote';
+import { RedeSocial } from './RedeSocial';
+import { Palestrante } from './Palestrante';
+
 export interface Evento {
   Id: number;
   Local: string;
@@ -8,7 +12,7 @@ export interface Evento {
   Telefone: string;
   Email: string;
   Lote: string;
-  // Lotes: Lote[];
-  // RedesSociais: RedeSocial[];
-  // PalestranteEventos: Palestrante[];
+  Lotes: Lote[];
+  RedesSociais: RedeSocial[];
+  PalestranteEventos: Palestrante[];
 }

@@ -14,7 +14,9 @@
     <tr>
       <th>
         <button (click)="alternarImagem()" class="btn btn-outline-primary">
-          Mostrar Imagem
+          <i
+            class="{{ mostrarImagem ? 'fa fa-eye-slash' : 'fa fa-eye' }} Imagem"
+          ></i>
         </button>
       </th>
       <th>#</th>
@@ -22,7 +24,7 @@
       <th>Local</th>
       <th>Data</th>
       <th>Qtd Pessoas</th>
-      <th>Lote</th>
+      <th>Lotes</th>
       <th>Opções</th>
     </tr>
   </thead>
@@ -39,12 +41,25 @@
       <td>{{ evento.Id }}</td>
       <td>{{ evento.Tema }}</td>
       <td>{{ evento.Local }}</td>
-      <td>{{ evento.DataEvento }}</td>
-      <td>{{ evento.QtdePessoas | percent }}</td>
-      <td>{{ evento.Lote }}</td>
+      <td>{{ evento.DataEvento | DateTimeFormatPipe }}</td>
+      <td>{{ evento.QtdePessoas }}</td>
       <td>
-        <button class="btn btn-success"></button>
-        <button class="btn btn-danger"></button>
+        <div *ngIf="!evento.Lotes.length">
+          Não informado
+        </div>
+        <div *ngIf="evento.Lotes.length">
+          {{ evento.Lotes[0].Nome }}
+        </div>
+      </td>
+      <td>
+        <div class="btn-group">
+          <button class="btn btn-sm btn-success" tooltip="Editar">
+            <i class="fa fa-edit"></i>
+          </button>
+          <button class="btn btn-sm btn-danger" tooltip="Excluir">
+            <i class="fa fa-eraser"></i>
+          </button>
+        </div>
       </td>
     </tr>
   </tbody>
