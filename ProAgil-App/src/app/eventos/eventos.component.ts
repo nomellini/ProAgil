@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { EventoService } from '../_services/evento.service';
 import { Evento } from '../_models/Evento';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 
 @Component({
   selector: 'app-eventos',
@@ -8,11 +9,25 @@ import { Evento } from '../_models/Evento';
   styleUrls: ['./eventos.component.css']
 })
 export class EventosComponent implements OnInit {
+  eventosFiltrados: Evento[] = [];
+  eventos: Evento[] = [];
+  imagemMargem = 2;
+  imagemLargura = 50;
+  mostrarImagem = false;
+  modalRef: BsModalRef;
+
   // tslint:disable-next-line: variable-name
   private _filtroLista: string;
+
+  constructor(
+    private eventoService: EventoService,
+    private modalService: BsModalService
+  ) {}
+
   get filtroLista(): string {
     return this._filtroLista;
   }
+
   set filtroLista(value: string) {
     this._filtroLista = value;
     this.eventosFiltrados = this.filtroLista
@@ -20,13 +35,9 @@ export class EventosComponent implements OnInit {
       : this.eventos;
   }
 
-  eventosFiltrados: Evento[] = [];
-  eventos: Evento[] = [];
-  imagemMargem = 2;
-  imagemLargura = 50;
-  mostrarImagem = false;
-
-  constructor(private eventoService: EventoService) {}
+  openModal(template: TemplateRef<any>) {
+    this.modalRef = this.modalService.show(template);
+  }
 
   filtrarEventos(filtro: string): Evento[] {
     filtro = filtro.toLocaleLowerCase();
