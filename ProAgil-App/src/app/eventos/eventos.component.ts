@@ -2,6 +2,8 @@ import { Component, OnInit, TemplateRef } from '@angular/core';
 import { EventoService } from '../_services/evento.service';
 import { Evento } from '../_models/Evento';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { typeWithParameters } from '@angular/compiler/src/render3/util';
 
 @Component({
   selector: 'app-eventos',
@@ -15,6 +17,7 @@ export class EventosComponent implements OnInit {
   imagemLargura = 50;
   mostrarImagem = false;
   modalRef: BsModalRef;
+  registerForm: FormGroup;
 
   // tslint:disable-next-line: variable-name
   private _filtroLista: string;
@@ -48,11 +51,34 @@ export class EventosComponent implements OnInit {
 
   ngOnInit() {
     this.getEventos();
+    this.validation();
   }
 
   alternarImagem() {
     this.mostrarImagem = !this.mostrarImagem;
   }
+
+  validation() {
+    this.registerForm = new FormGroup({
+      Tema: new FormControl('', [
+        Validators.required,
+        Validators.minLength(4),
+        Validators.maxLength(50)
+      ]),
+      Local: new FormControl('', Validators.required),
+      DataEvento: new FormControl('', Validators.required),
+      QtdePessoa: new FormControl('', [
+        Validators.required,
+        Validators.min(1),
+        Validators.max(120)
+      ]),
+      ImagemUrl: new FormControl('', Validators.required),
+      Telefone: new FormControl('', Validators.required),
+      Email: new FormControl('', [Validators.required, Validators.email])
+    });
+  }
+
+  salvarAlteracao() {}
 
   getEventos() {
     this.eventoService.getAllEventos().subscribe(
