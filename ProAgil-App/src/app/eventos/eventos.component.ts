@@ -15,6 +15,7 @@ defineLocale('pt-br', ptBrLocale);
 export class EventosComponent implements OnInit {
   eventosFiltrados: Evento[] = [];
   eventos: Evento[] = [];
+  evento: Evento;
   imagemMargem = 2;
   imagemLargura = 50;
   mostrarImagem = false;
@@ -46,6 +47,13 @@ export class EventosComponent implements OnInit {
 
   openModal(template: any) {
     template.show();
+  }
+
+  salvarAlteracao(template: any) {
+    if (this.registerForm.valid) {
+      this.evento = Object.assign({}, this.registerForm.value);
+      console.log(this.evento);
+    }
   }
 
   filtrarEventos(filtro: string): Evento[] {
@@ -81,8 +89,6 @@ export class EventosComponent implements OnInit {
       Email: ['', [Validators.required, Validators.email]]
     });
   }
-
-  salvarAlteracao() {}
 
   getEventos() {
     this.eventoService.getAllEventos().subscribe(
