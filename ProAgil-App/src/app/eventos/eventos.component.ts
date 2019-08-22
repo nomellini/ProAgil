@@ -2,8 +2,10 @@ import { Component, OnInit, TemplateRef } from '@angular/core';
 import { EventoService } from '../_services/evento.service';
 import { Evento } from '../_models/Evento';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { typeWithParameters } from '@angular/compiler/src/render3/util';
+import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { defineLocale, BsLocaleService, ptBrLocale } from 'ngx-bootstrap';
+
+defineLocale('pt-br', ptBrLocale);
 
 @Component({
   selector: 'app-eventos',
@@ -24,8 +26,12 @@ export class EventosComponent implements OnInit {
 
   constructor(
     private eventoService: EventoService,
-    private modalService: BsModalService
-  ) {}
+    private modalService: BsModalService,
+    private fb: FormBuilder,
+    private localeService: BsLocaleService
+  ) {
+    this.localeService.use('pt-br');
+  }
 
   get filtroLista(): string {
     return this._filtroLista;
@@ -38,8 +44,8 @@ export class EventosComponent implements OnInit {
       : this.eventos;
   }
 
-  openModal(template: TemplateRef<any>) {
-    this.modalRef = this.modalService.show(template);
+  openModal(template: any) {
+    template.show();
   }
 
   filtrarEventos(filtro: string): Evento[] {
@@ -59,22 +65,20 @@ export class EventosComponent implements OnInit {
   }
 
   validation() {
-    this.registerForm = new FormGroup({
-      Tema: new FormControl('', [
-        Validators.required,
-        Validators.minLength(4),
-        Validators.maxLength(50)
-      ]),
-      Local: new FormControl('', Validators.required),
-      DataEvento: new FormControl('', Validators.required),
-      QtdePessoa: new FormControl('', [
-        Validators.required,
-        Validators.min(1),
-        Validators.max(120)
-      ]),
-      ImagemUrl: new FormControl('', Validators.required),
-      Telefone: new FormControl('', Validators.required),
-      Email: new FormControl('', [Validators.required, Validators.email])
+    this.registerForm = this.fb.group({
+      Tema: [
+        '',
+        [Validators.required, Validators.minLength(4), Validators.maxLength(50)]
+      ],
+      Local: ['', Validators.required],
+      DataEvento: ['', Validators.required],
+      QtdePessoa: [
+        '',
+        [Validators.required, Validators.min(1), Validators.max(120)]
+      ],
+      ImagemUrl: ['', Validators.required],
+      Telefone: ['', Validators.required],
+      Email: ['', [Validators.required, Validators.email]]
     });
   }
 
