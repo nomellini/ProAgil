@@ -65,7 +65,7 @@
           <button
             class="btn btn-sm btn-success"
             tooltip="Editar"
-            (click)="openModal(template)"
+            (click)="editarEventoOpenModal(template, evento)"
           >
             <i class="fa fa-edit"></i>
           </button>
@@ -205,17 +205,17 @@
                 class="form-control"
                 [ngClass]="{
                   'is-invalid':
-                    registerForm.get('QtdePessoa').errors &&
-                    registerForm.get('QtdePessoa').touched
+                    registerForm.get('QtdePessoas').errors &&
+                    registerForm.get('QtdePessoas').touched
                 }"
-                formControlName="QtdePessoa"
+                formControlName="QtdePessoas"
                 placeholder="Insira a quantidade"
               />
               <div
                 class="invalid-feedback"
                 *ngIf="
-                  registerForm.get('QtdePessoa').hasError('required') &&
-                  registerForm.get('QtdePessoa').touched
+                  registerForm.get('QtdePessoas').hasError('required') &&
+                  registerForm.get('QtdePessoas').touched
                 "
               >
                 Quantidade é obrigatório
@@ -223,8 +223,8 @@
               <div
                 class="invalid-feedback"
                 *ngIf="
-                  registerForm.get('QtdePessoa').hasError('max') &&
-                  registerForm.get('QtdePessoa').touched
+                  registerForm.get('QtdePessoas').hasError('max') &&
+                  registerForm.get('QtdePessoas').touched
                 "
               >
                 Quantidade máxima são 120 pessoas
@@ -232,8 +232,8 @@
 
               <div
                 *ngIf="
-                  registerForm.get('QtdePessoa').hasError('min') &&
-                  registerForm.get('QtdePessoa').touched
+                  registerForm.get('QtdePessoas').hasError('min') &&
+                  registerForm.get('QtdePessoas').touched
                 "
                 class="invalid-feedback"
               >

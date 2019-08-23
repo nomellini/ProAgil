@@ -4,6 +4,7 @@ import { Evento } from '../_models/Evento';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { defineLocale, BsLocaleService, ptBrLocale } from 'ngx-bootstrap';
+import { ThrowStmt } from '@angular/compiler';
 
 defineLocale('pt-br', ptBrLocale);
 
@@ -46,13 +47,45 @@ export class EventosComponent implements OnInit {
   }
 
   openModal(template: any) {
+    this.registerForm.reset();
     template.show();
+  }
+
+  editarEventoOpenModal(template: any, evento: Evento) {
+    this.evento = evento;
+    this.openModal(template);
+    this.registerForm.patchValue(this.evento);
   }
 
   salvarAlteracao(template: any) {
     if (this.registerForm.valid) {
-      this.evento = Object.assign({}, this.registerForm.value);
-      console.log(this.evento);
+      this.evento = Object.assign(
+        { Id: this.evento.Id },
+        this.registerForm.value
+      );
+
+      if (this.evento.Id) {
+        this.eventoService.putEventos(this.evento).subscribe(
+          (novoEvento: Evento) => {
+            template.hide();
+            this.getEventos();
+          },
+          error => {
+            console.log(error);
+          }
+        );
+      } else {
+        this.eventoService.postEventos(this.evento).subscribe(
+          (novoEvento: Evento) => {
+            console.log(novoEvento);
+            template.hide();
+            this.getEventos();
+          },
+          error => {
+            console.log(error);
+          }
+        );
+      }
     }
   }
 
@@ -80,7 +113,7 @@ export class EventosComponent implements OnInit {
       ],
       Local: ['', Validators.required],
       DataEvento: ['', Validators.required],
-      QtdePessoa: [
+      QtdePessoas: [
         '',
         [Validators.required, Validators.min(1), Validators.max(120)]
       ],
