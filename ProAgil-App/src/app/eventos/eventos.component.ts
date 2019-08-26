@@ -4,9 +4,15 @@ import { Evento } from '../_models/Evento';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { defineLocale, BsLocaleService, ptBrLocale } from 'ngx-bootstrap';
+import { ToastrService } from 'ngx-toastr';
 import { ThrowStmt } from '@angular/compiler';
 
 defineLocale('pt-br', ptBrLocale);
+
+enum eStatus {
+  Editar,
+  Criar
+}
 
 @Component({
   selector: 'app-eventos',
@@ -22,6 +28,8 @@ export class EventosComponent implements OnInit {
   mostrarImagem = false;
   modalRef: BsModalRef;
   registerForm: FormGroup;
+  bodyDeletarEvento = '';
+  Acao: eStatus = eStatus.Criar;
 
   // tslint:disable-next-line: variable-name
   private _filtroLista: string;
@@ -30,7 +38,8 @@ export class EventosComponent implements OnInit {
     private eventoService: EventoService,
     private modalService: BsModalService,
     private fb: FormBuilder,
-    private localeService: BsLocaleService
+    private localeService: BsLocaleService,
+    private toastr: ToastrService
   ) {
     this.localeService.use('pt-br');
   }
@@ -46,40 +55,50 @@ export class EventosComponent implements OnInit {
       : this.eventos;
   }
 
+  novoEvento(template: any) {
+    this.Acao = eStatus.Criar;
+    this.openModal(template);
+  }
+
   openModal(template: any) {
     this.registerForm.reset();
     template.show();
   }
 
-  editarEventoOpenModal(template: any, evento: Evento) {
+  editarEvento(template: any, evento: Evento) {
     this.evento = evento;
+    this.Acao = eStatus.Editar;
     this.openModal(template);
     this.registerForm.patchValue(this.evento);
   }
 
   salvarAlteracao(template: any) {
     if (this.registerForm.valid) {
-      this.evento = Object.assign(
-        { Id: this.evento.Id },
-        this.registerForm.value
-      );
+      if (this.Acao === eStatus.Editar) {
+        this.evento = Object.assign(
+          { Id: this.evento.Id },
+          this.registerForm.value
+        );
 
-      if (this.evento.Id) {
         this.eventoService.putEventos(this.evento).subscribe(
           (novoEvento: Evento) => {
             template.hide();
+
             this.getEventos();
+            this.toastr.success('Editado com sucesso');
           },
           error => {
             console.log(error);
           }
         );
       } else {
+        this.evento = Object.assign(this.registerForm.value);
         this.eventoService.postEventos(this.evento).subscribe(
           (novoEvento: Evento) => {
             console.log(novoEvento);
             template.hide();
             this.getEventos();
+            this.toastr.success('Inserido com sucesso');
           },
           error => {
             console.log(error);
@@ -121,6 +140,25 @@ export class EventosComponent implements OnInit {
       Telefone: ['', Validators.required],
       Email: ['', [Validators.required, Validators.email]]
     });
+  }
+
+  excluirEvento(evento: Evento, template: any) {
+    this.openModal(template);
+    this.evento = evento;
+    this.bodyDeletarEvento = `Tem certeza que deseja excluir o evento ${evento.Tema} com id ${evento.Id} ?`;
+  }
+
+  confirmarDelete(template: any) {
+    this.eventoService.deleteEvento(this.evento.Id).subscribe(
+      () => {
+        template.hide();
+        this.getEventos();
+        this.toastr.success('Evento Deletado');
+      },
+      error => {
+        this.toastr.error(`Erro ${error} ao deletar evento`);
+      }
+    );
   }
 
   getEventos() {

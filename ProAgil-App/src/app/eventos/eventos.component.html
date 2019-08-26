@@ -11,7 +11,7 @@
   </div>
 
   <div>
-    <button class="btn btn-outline-primary" (click)="openModal(template)">
+    <button class="btn btn-outline-primary" (click)="novoEvento(template)">
       <i class="fa fa-plus-circle"></i>&nbsp; Novo Evento
     </button>
   </div>
@@ -50,7 +50,7 @@
       <td>{{ evento.Id }}</td>
       <td>{{ evento.Tema }}</td>
       <td>{{ evento.Local }}</td>
-      <td>{{ evento.DataEvento | DateTimeFormatPipe }}</td>
+      <td>{{ evento.DataEvento }}</td>
       <td>{{ evento.QtdePessoas }}</td>
       <td>
         <div *ngIf="!evento.Lotes.length">
@@ -65,11 +65,15 @@
           <button
             class="btn btn-sm btn-success"
             tooltip="Editar"
-            (click)="editarEventoOpenModal(template, evento)"
+            (click)="editarEvento(template, evento)"
           >
             <i class="fa fa-edit"></i>
           </button>
-          <button class="btn btn-sm btn-danger" tooltip="Excluir">
+          <button
+            class="btn btn-sm btn-danger"
+            (click)="excluirEvento(evento, confirm)"
+            tooltip="Excluir"
+          >
             <i class="fa fa-eraser"></i>
           </button>
         </div>
@@ -334,6 +338,47 @@
           (click)="salvarAlteracao(template)"
         >
           Salvar Alterações
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div bsModal #confirm="bs-modal" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title pull-left">
+          Deletando Evento
+        </h4>
+        <button
+          type="button"
+          class="close pull-right"
+          (click)="confirm.hide()"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>
+          {{ bodyDeletarEvento }}
+        </p>
+      </div>
+      <div class="modal-footer btn-group d-flex">
+        <button
+          type="button"
+          class="btn btn-outline-primary"
+          (click)="confirm.hide()"
+        >
+          Cancelar
+        </button>
+        <button
+          type="button"
+          class="btn btn-outline-danger"
+          (click)="confirmarDelete(confirm)"
+        >
+          Deletar
         </button>
       </div>
     </div>

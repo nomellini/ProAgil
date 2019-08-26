@@ -30,4 +30,8 @@ export class EventoService {
   putEventos(evento: Evento) {
     return this.http.put(`${this.baseURL}/${evento.Id}`, evento);
   }
+
+  deleteEvento(id: number) {
+    return this.http.delete(`${this.baseURL}/${id}`);
+  }
 }
