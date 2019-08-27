@@ -20,6 +20,8 @@ enum eStatus {
   styleUrls: ['./eventos.component.css']
 })
 export class EventosComponent implements OnInit {
+  titulo = 'Eventos';
+
   eventosFiltrados: Evento[] = [];
   eventos: Evento[] = [];
   evento: Evento;
@@ -95,7 +97,6 @@ export class EventosComponent implements OnInit {
         this.evento = Object.assign(this.registerForm.value);
         this.eventoService.postEventos(this.evento).subscribe(
           (novoEvento: Evento) => {
-            console.log(novoEvento);
             template.hide();
             this.getEventos();
             this.toastr.success('Inserido com sucesso');
@@ -166,7 +167,6 @@ export class EventosComponent implements OnInit {
       (eventos: Evento[]) => {
         this.eventos = eventos;
         this.eventosFiltrados = eventos;
-        console.log(eventos);
       },
       error => {
         console.log(error);

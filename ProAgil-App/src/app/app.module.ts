@@ -18,13 +18,21 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { PalestrantesComponent } from './palestrantes/palestrantes.component';
+import { ContatosComponent } from './contatos/contatos.component';
+import { TituloComponent } from './_shared/titulo/titulo.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     EventosComponent,
     NavComponent,
-    DateTimeFormatPipePipe
+    DateTimeFormatPipePipe,
+    DashboardComponent,
+    PalestrantesComponent,
+    TituloComponent,
+    ContatosComponent
   ],
   imports: [
     BrowserModule,
