@@ -45,7 +45,9 @@
           *ngIf="mostrarImagem"
           [style.width.px]="imagemLargura"
           [style.margin.px]="imagemMargem"
-          src="http://localhost:5000/img/{{ evento.ImagemUrl }}"
+          src="http://localhost:5000/Resources/Images/{{
+            evento.ImagemUrl
+          }}?_ts={{ dataAtual }}"
         />
       </td>
       <td>{{ evento.Id }}</td>
@@ -247,17 +249,31 @@
             </div>
             <div class="form-group col-md-9">
               <label>Imagem</label>
-              <input
-                type="text"
-                class="form-control"
-                formControlName="ImagemUrl"
-                [ngClass]="{
-                  'is-invalid':
-                    registerForm.get('ImagemUrl').errors &&
-                    registerForm.get('ImagemUrl').touched
-                }"
-                placeholder="Insira o nome da imagem"
-              />
+              <table>
+                <tr>
+                  <td>
+                    <button class="btn btn-success" (click)="file.click()">
+                      Enviar Imagem
+                    </button>
+                    <input
+                      type="file"
+                      style="display:none"
+                      #file
+                      class="form-control"
+                      (change)="onFileChange($event)"
+                      formControlName="ImagemUrl"
+                      [ngClass]="{
+                        'is-invalid':
+                          registerForm.get('ImagemUrl').errors &&
+                          registerForm.get('ImagemUrl').touched
+                      }"
+                      placeholder="Insira
+                    o nome da imagem"
+                    />
+                  </td>
+                </tr>
+              </table>
+
               <div
                 class="invalid-feedback"
                 *ngIf="

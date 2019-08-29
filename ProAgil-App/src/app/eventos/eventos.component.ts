@@ -22,6 +22,8 @@ enum eStatus {
 export class EventosComponent implements OnInit {
   titulo = 'Eventos';
 
+  file: File;
+  filenameToUpdate: string;
   eventosFiltrados: Evento[] = [];
   eventos: Evento[] = [];
   evento: Evento;
@@ -32,6 +34,8 @@ export class EventosComponent implements OnInit {
   registerForm: FormGroup;
   bodyDeletarEvento = '';
   Acao: eStatus = eStatus.Criar;
+
+  dataAtual = '';
 
   // tslint:disable-next-line: variable-name
   private _filtroLista: string;
@@ -68,9 +72,11 @@ export class EventosComponent implements OnInit {
   }
 
   editarEvento(template: any, evento: Evento) {
-    this.evento = evento;
     this.Acao = eStatus.Editar;
     this.openModal(template);
+    this.evento = Object.assign({}, evento);
+    this.filenameToUpdate = evento.ImagemUrl.toString();
+    this.evento.ImagemUrl = '';
     this.registerForm.patchValue(this.evento);
   }
 
@@ -81,6 +87,8 @@ export class EventosComponent implements OnInit {
           { Id: this.evento.Id },
           this.registerForm.value
         );
+
+        this.uploadImage();
 
         this.eventoService.putEventos(this.evento).subscribe(
           (novoEvento: Evento) => {
@@ -95,6 +103,9 @@ export class EventosComponent implements OnInit {
         );
       } else {
         this.evento = Object.assign(this.registerForm.value);
+
+        this.uploadImage();
+
         this.eventoService.postEventos(this.evento).subscribe(
           (novoEvento: Evento) => {
             template.hide();
@@ -106,6 +117,25 @@ export class EventosComponent implements OnInit {
           }
         );
       }
+    }
+  }
+
+  uploadImage() {
+    if (this.Acao === eStatus.Criar) {
+      const nomeArquivo = this.evento.ImagemUrl.split('\\', 3);
+      this.evento.ImagemUrl = nomeArquivo[2];
+      this.eventoService.postUpload(this.file, nomeArquivo[2]).subscribe(() => {
+        this.dataAtual = new Date().getMilliseconds().toString();
+        this.getEventos();
+      });
+    } else {
+      this.evento.ImagemUrl = this.filenameToUpdate;
+      this.eventoService
+        .postUpload(this.file, this.filenameToUpdate)
+        .subscribe(() => {
+          this.dataAtual = new Date().getMilliseconds().toString();
+          this.getEventos();
+        });
     }
   }
 
@@ -135,7 +165,7 @@ export class EventosComponent implements OnInit {
       DataEvento: ['', Validators.required],
       QtdePessoas: [
         '',
-        [Validators.required, Validators.min(1), Validators.max(120)]
+        [Validators.required, Validators.min(1), Validators.max(12000)]
       ],
       ImagemUrl: ['', Validators.required],
       Telefone: ['', Validators.required],
@@ -172,5 +202,13 @@ export class EventosComponent implements OnInit {
         console.log(error);
       }
     );
+  }
+
+  onFileChange(event) {
+    const reader = new FileReader();
+    if (event.target.files && event.target.files.length) {
+      this.file = event.target.files;
+      console.log(this.file);
+    }
   }
 }
